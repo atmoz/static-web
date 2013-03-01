@@ -34,20 +34,14 @@
     $(document).ready(function() {
         prepareLinks(document);
 
-        // In case popstate gets triggered onLoad
-        var onLoadPage = false;
-
         // Load pages when user browse the history
         $(window).bind('popstate', function(event) {
             loadPage(location.hash, false);
-            onLoadPage = true;
         });
 
         // If user requests a page, load it
         if (location.hash.search('#!') != -1) {
-            if (!onLoadPage) {
-                loadPage(location.hash, false);
-            }
+            loadPage(location.hash, false);
         }
     });
 
