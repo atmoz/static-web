@@ -1,7 +1,6 @@
 ;(function($) {
     var pathname = window.location.pathname;
     var baseUrl = pathname.substring(0, pathname.lastIndexOf('/') + 1);
-    var urlChanged = false;
 
     function loadPage(url, addToHistory) {
         var $content = $('#static-content');
@@ -16,7 +15,6 @@
 
                 if (addToHistory) {
                     history.pushState('', '', url);
-                    urlChanged = true;
                 }
 
                 prepareLinks($content);
