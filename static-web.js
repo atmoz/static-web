@@ -1,6 +1,4 @@
 ;(function($) {
-    var pathname = window.location.pathname;
-    var baseUrl = pathname.substring(0, pathname.lastIndexOf('/') + 1);
 
     function loadPage(url, addToHistory) {
         var $content = $('#static-content');
