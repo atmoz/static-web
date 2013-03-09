@@ -3,15 +3,28 @@
     <head>
         <meta charset="utf-8">
         <title>My static webpage</title>
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-        <script src="marked.js"></script>
-        <script src="static-web.js"></script>
     </head>
     <body>
-        <ul>
+        <ul id="menu">
             <li><a href="README.md">README</a></li>
             <li><a href="content/example.md">Example</a></li>
         </ul>
-        <div id="static-content"></div>
+
+        <div id="content"></div>
+
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+        <script src="marked.js"></script>
+        <script src="static-web.js"></script>
+        <script>
+            $(document).ready(function() {
+                staticWeb({
+                    linkSelector: 'a[href$=".md"]',
+                    contentHandler: function(data, url) {
+                        // Convert markdown to HTML
+                        return marked(data);
+                    }
+                });
+            });
+        </script>
     </body>
 </html>
