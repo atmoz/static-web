@@ -5,12 +5,14 @@
             container: document,
             contentSelector: '#content',
             linkSelector: '#menu a',
-            loadPageFail: function($content, url) {
+            pageLoadFail: function($content, url) {
                 $content.html('Can\'t load ' + encodeURI(url));
             },
             contentHandler: function(data, url) {
                 return data;
-            }
+            },
+            beforePageLoad: function($content, url) {},
+            afterPageLoad: function($content, url) {}
         };
 
         options = $.extend( {}, defaults, options );
@@ -18,13 +20,21 @@
         // Get those links ready for action
         prepareLinks(options.container);
 
+        // Make sure page only gets loaded once
+        var pageLoaded = false;
+
         // Load pages when user browse the history
         $(window).bind('popstate', function(event) {
             loadPage(location.hash, false);
+            pageLoaded = true;
         });
 
-        // Try loading the page right now
-        loadPage(location.hash, false);
+        // Try loading the page (if not already loaded by popstate)
+        setTimeout(function() {
+            if (!pageLoaded) {
+                loadPage(location.hash, false);
+            }
+        }, 100);
 
         // Load page with AJAX, converting markdown files to HTML
         function loadPage(url, addToHistory) {
@@ -34,6 +44,8 @@
 
             var cleanUrl = url.replace('#!', '');
             var $content = $(options.contentSelector);
+
+            options.beforePageLoad($content, cleanUrl);
 
             if (cleanUrl == '') {
                 $content.html(''); // Empty url - empty content
@@ -47,7 +59,8 @@
                     if (addToHistory) {
                         history.pushState('', '', url);
                     }
-                }).fail(options.loadPageFail($content, cleanUrl));
+                }).fail(options.pageLoadFail($content, cleanUrl))
+                  .always(options.afterPageLoad($content, cleanUrl));
             }
         }
 
